@@ -1,0 +1,35 @@
+Add dependency in the infytel-customer service
+
+<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-netflix-hystrix</artifactId>
+</dependency>
+Add the @EnableCircuitBreaker annotation in the application class of infytel-customer. This tells Spring Cloud that the application uses the Circuit Breaker pattern
+
+Create a service class called CustomerCircuit with @service annotation
+
+Add the below method in the service class with @HystrixCommand annotation. This annotation makes the method call fault tolerant. This annotation will work only if the class is component or service
+
+@HystrixCommand(fallbackmethod="getFriendsFallback")
+public List<Long> getFriends(Long phoneNo){	
+		List<Long> numbers= template.getForObject("http://FriendFamilyMS/friends/"+phoneNo, List.class);
+		return numbers;
+}
+Create the below method in the same class:
+public List<Long> getFriendsFallback(Long phoneNo){	
+		return new ArrayList<Long>();
+}
+ 
+
+Add the below properties in the CustomerMS.properties
+
+hystrix.command.default.circuitBreaker.requestVolumeThreshold=10
+hystrix.command.default.circuitBreaker.sleepWindowInMilliseconds=10000
+hystrix.metrics.rollingStats.timeInMilliseconds=10000
+hystrix.command.default.circuitBreaker.errorThresholdPercentage=50
+Add @Autowired CustomerCircuit circuit; in the CustomerController
+
+Update the  call from CustomerController as shown below:
+
+List<Long> friends=circuit.getFriends(phoneNo);
+Run the code
