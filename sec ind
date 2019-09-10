@@ -1,0 +1,13 @@
+<dependency>
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-cloud-starter-security</artifactId>
+</dependency>
+Add the @EnableResourceServer annotation to all microservices application file
+
+Add the below configuration in the application.yml file
+
+client:
+    accessTokenUri: https://github.com/login/oauth/access_token
+    userAuthorizationUri: https://github.com/login/oauth/authorize
+resource:
+    userInfoUri: https://api.github.com/user
