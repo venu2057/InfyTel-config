@@ -1,0 +1,28 @@
+Add the below properties in the application.properties file of infytel-eureka
+
+spring.application.name=Eureka1
+server.port=5555
+eureka.client.fetch-registry=false
+eureka.client.register-with-eureka=false
+eureka.client.service-url.defaultZone=http://localhost:5555/eureka
+Add @EnableDiscoveryServer annotation in the application file of infytel-eureka
+
+Add the below dependencies in the microservices:
+
+<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+</dependency>
+Add @EnableDiscoveryServer in all microservices application file
+
+Add the below property in the application.properties file in git
+
+eureka.client.service-url.defaultZone=http://localhost:5555/eureka
+Autowire Discovery client in CustomerController class as @Autowired DiscoveryClient client;
+
+Remove the String friendUri; from CustomerController and update the code in accessing the friend-family-service as:
+
+List<ServiceInstance> instances=client.getInstances("FriendFamilyMS");
+ServiceInstance instance=instances.get(0);
+URI friendUri = instance.getUri();
+Note: The service discovery happens through the spring.application.name value of the services. Hence they should not change.
