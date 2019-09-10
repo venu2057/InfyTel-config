@@ -1,0 +1,20 @@
+Create an interface
+@FeignClient("PlanMS")
+public interface CustPlanFeign {
+	@RequestMapping(value="/plans/{planId}")
+	PlanDTO getSpecificPlan(@PathVariable("planId") int planId);
+	
+}
+The interface must be annotated with @FeignClient and must mention the service name for which we are writing the Feign Client.
+
+We need not provide an implementation for this interface. The framework will provide a dynamic implementation at run time.
+
+Autowire the feign client as:    
+
+@Autowired
+    CustPlanFeign planFeign;
+ 
+
+Invoke the plan microservice as 
+
+planFeign.getSpecificPlan(planId);
